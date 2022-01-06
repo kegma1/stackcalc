@@ -17,7 +17,7 @@ fn main() {
     match arg_1 {
         Ok(amount) => {
                     let arg_2 = get_arg(args.get(2));
-                    // If args_2 if ok it return the value, else it returns 64 if no value was passed, and it goes into tui mode if the value failed to parse.
+                    // If args_2 is ok it return the value, else it returns 64 if no value was passed, and it goes into tui mode if the value failed to parse.
                     let stack_size = match arg_2 {
                         Ok(x) => x,
                         Err(e) => match e {
