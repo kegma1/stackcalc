@@ -5,7 +5,7 @@ use std::io::prelude::*;
 
 enum ArgErr {
     NotPassed,
-    Failed
+    Failed,
 }
 
 fn main() {
@@ -16,24 +16,27 @@ fn main() {
     // If the first argument is ok the value is stored in amount, if it fails in any way it goes into tui mode.
     match arg_1 {
         Ok(amount) => {
-                    let arg_2 = get_arg(args.get(2));
-                    // If args_2 if ok it return the value, else it returns 64 if no value was passed, and it goes into tui mode if the value failed to parse.
-                    let stack_size = match arg_2 {
-                        Ok(x) => x,
-                        Err(e) => match e {
-                            ArgErr::NotPassed => 64,
-                            ArgErr::Failed => {tui(); 0} // Idk why i need this 0, but it does not mater since tui mode exits the program early so this wont be an issue.
-                        }
-                    };
-                    let [stack, items] = total_to_stack(stack_size, amount);
-                    println!("{} stacks and {} items", stack, items);
-                }
-        Err(_) => tui()
+            let arg_2 = get_arg(args.get(2));
+            // If args_2 if ok it return the value, else it returns 64 if no value was passed, and it goes into tui mode if the value failed to parse.
+            let stack_size = match arg_2 {
+                Ok(x) => x,
+                Err(e) => match e {
+                    ArgErr::NotPassed => 64,
+                    ArgErr::Failed => {
+                        tui();
+                        0
+                    } // Idk why i need this 0, but it does not mater since tui mode exits the program early so this wont be an issue.
+                },
+            };
+            let [stack, items] = total_to_stack(stack_size, amount);
+            println!("{} stacks and {} items", stack, items);
+        }
+        Err(_) => tui(),
     }
 }
 
 // Text-based user interface
-fn tui()->() {
+fn tui() {
     let amount = input::<u32>().msg("Enter amount of items\n").get();
     let stack_size = input::<u32>()
         .msg("Enter stack size\n(Default is 64)\n")
@@ -46,16 +49,16 @@ fn tui()->() {
 }
 
 // Takes and optional string and either parses it to a u32, returns a NotPassed error if there is no argument or returns a Failed error if the parsing fail
-fn get_arg(arg:Option<&String>)->Result<u32, ArgErr> {
+fn get_arg(arg: Option<&String>) -> Result<u32, ArgErr> {
     match arg {
         Some(v) => {
             let parsed_arg = v.parse::<u32>();
             match parsed_arg {
                 Ok(x) => Ok(x),
-                Err(_) => Err(ArgErr::Failed)
+                Err(_) => Err(ArgErr::Failed),
             }
-        },
-        None => Err(ArgErr::NotPassed)
+        }
+        None => Err(ArgErr::NotPassed),
     }
 }
 
